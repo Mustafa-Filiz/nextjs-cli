@@ -1,3 +1,4 @@
 #!/usr/bin/env node
+import { program } from "./command";
 
-const message: string = "Hello, World!";
+program.parse();
