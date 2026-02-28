@@ -1,8 +1,29 @@
 import fs from "fs";
 import path from "path";
-import { error } from "./log";
+import { error, info } from "./log";
 
 export const fileEditor = {
+  create(
+    filePath: string,
+    content: string = "",
+    options: {
+      overwrite?: boolean;
+    } = {},
+  ) {
+    const { overwrite = false } = options;
+
+    if (!overwrite && fs.existsSync(filePath)) {
+      error(`Dosya zaten mevcut: ${filePath}`);
+      process.exit(1);
+    }
+
+    const dir = path.dirname(filePath);
+    fs.mkdirSync(dir, { recursive: true });
+
+    fs.writeFileSync(filePath, content, "utf-8");
+    info(`Dosya oluşturuldu: ${filePath}`);
+  },
+
   append(filePath: string, content: string) {
     fs.appendFileSync(filePath, content, "utf-8");
   },

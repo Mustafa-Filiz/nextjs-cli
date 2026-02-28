@@ -4,8 +4,8 @@ import { createNextApp } from "./helpers/create-next-app";
 import { installPackages } from "./helpers/install-packages";
 import { error } from "./helpers/log";
 import {
+  changeLayoutFiles,
   isUILibrary,
-  newLayoutWithAntd,
   UI_LIBRARY_COMMANDS,
 } from "./ui-libraries";
 
@@ -35,5 +35,5 @@ program
       projectName: projectName,
     });
 
-    newLayoutWithAntd(projectName);
+    changeLayoutFiles[uiLibrary]?.(projectName);
   });
