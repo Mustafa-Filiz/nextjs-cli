@@ -13,7 +13,7 @@ export const fileEditor = {
     const { overwrite = false } = options;
 
     if (!overwrite && fs.existsSync(filePath)) {
-      error(`Dosya zaten mevcut: ${filePath}`);
+      error(`File already exists: ${filePath}`);
       process.exit(1);
     }
 
@@ -21,7 +21,12 @@ export const fileEditor = {
     fs.mkdirSync(dir, { recursive: true });
 
     fs.writeFileSync(filePath, content, "utf-8");
-    info(`Dosya oluşturuldu: ${filePath}`);
+    info(`File created: ${filePath}`);
+  },
+
+  appendStart(filePath: string, content: string) {
+    const existingContent = fs.readFileSync(filePath, "utf-8");
+    fs.writeFileSync(filePath, `${content}\n${existingContent}`, "utf-8");
   },
 
   append(filePath: string, content: string) {

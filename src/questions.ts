@@ -31,7 +31,6 @@ export async function askQuestions() {
     message: "Which Database Platform do you want to use?",
     choices: [
       { name: "Prisma", value: "prisma" },
-      { name: "Drizzle", value: "drizzle" },
       { name: "None", value: "none" },
     ],
   });

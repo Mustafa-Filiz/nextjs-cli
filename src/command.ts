@@ -29,10 +29,10 @@ program
       UI_LIBRARY_COMMANDS[uiLibrary];
 
     installPackages({
+      projectName,
       ...(dependencies.length > 0 ? { dependencies } : {}),
       ...(devDependencies.length > 0 ? { devDependencies } : {}),
       ...(executeCommands.length > 0 ? { executeCommands } : {}),
-      projectName: projectName,
     });
 
     changeLayoutFiles[uiLibrary]?.(projectName);
