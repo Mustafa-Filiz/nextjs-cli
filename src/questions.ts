@@ -22,7 +22,6 @@ export async function askQuestions() {
     message: "Which Auth Library do you want to use?",
     choices: [
       { name: "Better Auth", value: "better-auth" },
-      { name: "Next Auth", value: "next-auth" },
       { name: "None", value: "none" },
     ],
   });
