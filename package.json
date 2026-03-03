@@ -1,11 +1,12 @@
 {
-  "name": "create-nextjs",
+  "name": "create-nextjs-app",
   "version": "1.0.0",
   "bin": {
-    "create-nextjs": "./dist/index.js"
+    "create-nextjs-app": "./dist/index.js"
   },
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "dev": "tsc -w"
   },
