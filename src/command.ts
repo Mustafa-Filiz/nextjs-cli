@@ -1,7 +1,11 @@
 import { Command } from "commander";
 import { askQuestions } from "./questions";
 import { createNextApp } from "./helpers/create-next-app";
-import { installPackages } from "./helpers/install-packages";
+import {
+  installDependencies,
+  installDevDependecies,
+  installExecuteCommands,
+} from "./helpers/install-packages";
 import { error } from "./helpers/log";
 import {
   changeLayoutFiles,
@@ -31,26 +35,25 @@ program
     // Install and create files for selected UI Library
 
     if (!isUILibrary(uiLibrary)) {
-      error(`Geçersiz UI Library: ${uiLibrary}`);
+      error(`Invalid UI Library: ${uiLibrary}`);
       process.exit(1);
     }
 
     const { dependencies, devDependencies, executeCommands } =
       UI_LIBRARY_COMMANDS[uiLibrary];
 
-    installPackages({
-      projectName,
-      ...(dependencies.length > 0 ? { dependencies } : {}),
-      ...(devDependencies.length > 0 ? { devDependencies } : {}),
-      ...(executeCommands.length > 0 ? { executeCommands } : {}),
-    });
+    dependencies.length > 0 && installDependencies(projectName, dependencies);
+    devDependencies.length > 0 &&
+      installDevDependecies(projectName, devDependencies);
+    executeCommands.length > 0 &&
+      installExecuteCommands(projectName, executeCommands);
 
     changeLayoutFiles[uiLibrary]?.(projectName);
 
     // Install and create files for selected DB Library
 
     if (!isDBLibrary(db)) {
-      error(`Geçersiz DB Library: ${db}`);
+      error(`Invalid DB Library: ${db}`);
       process.exit(1);
     }
 
@@ -60,19 +63,16 @@ program
       executeCommands: dbExecCmd,
     } = DB_LIBRARY_COMMANDS[db];
 
-    installPackages({
-      projectName,
-      ...(dependencies.length > 0 ? { dependencies: dbDeps } : {}),
-      ...(devDependencies.length > 0 ? { devDependencies: dbDevDeps } : {}),
-      ...(executeCommands.length > 0 ? { executeCommands: dbExecCmd } : {}),
-    });
+    dbDeps.length > 0 && installDependencies(projectName, dbDeps);
+    dbDevDeps.length > 0 && installDevDependecies(projectName, dbDevDeps);
+    dbExecCmd.length > 0 && installExecuteCommands(projectName, dbExecCmd);
 
     createDbFiles[db]?.(projectName);
 
     // Install and create files for selected Auth Library
 
     if (!isAuthLibrary(authLibrary)) {
-      error(`Geçersiz Auth Library: ${authLibrary}`);
+      error(`Invalid Auth Library: ${authLibrary}`);
       process.exit(1);
     }
 
@@ -82,12 +82,9 @@ program
       executeCommands: authExecCmd,
     } = AUTH_LIBRARY_COMMANDS[authLibrary];
 
-    installPackages({
-      projectName,
-      ...(dependencies.length > 0 ? { dependencies: authDeps } : {}),
-      ...(devDependencies.length > 0 ? { devDependencies: authDevDeps } : {}),
-      ...(executeCommands.length > 0 ? { executeCommands: authExecCmd } : {}),
-    });
+    authDeps.length > 0 && installDependencies(projectName, authDeps);
+    authDevDeps.length > 0 && installDevDependecies(projectName, authDevDeps);
+    authExecCmd.length > 0 && installExecuteCommands(projectName, authExecCmd);
 
     createAuthFiles[authLibrary]?.(projectName);
   });
