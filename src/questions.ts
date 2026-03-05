@@ -1,42 +1,36 @@
-import { confirm, input, select } from "@inquirer/prompts";
+import { confirm, input } from "@inquirer/prompts";
 
 export async function askQuestions() {
   const projectName = await input({
     message: "Enter project name",
+    default: "my-app",
   });
 
-  const uiLibrary = await select({
-    message: "Which UI Library do you want to use?",
-    choices: [
-      { name: "Ant Design", value: "antd" },
-      { name: "Chakra UI", value: "chakra" },
-      { name: "Prime React", value: "prime" },
-      { name: "shadcn/ui", value: "shadcn" },
-      { name: "Material UI", value: "mui" },
-      { name: "Mantine", value: "mantine" },
-      { name: "None", value: "none" },
-    ],
+  const hasAntDesign = await confirm({
+    message: "Do you want to install Ant Design?",
+    default: true,
   });
 
-  const authLibrary = await select({
-    message: "Which Auth Library do you want to use?",
-    choices: [
-      { name: "Better Auth", value: "better-auth" },
-      { name: "None", value: "none" },
-    ],
+  const hasBetterAuth = await confirm({
+    message: "Do you want to install Better Auth?",
+    default: true,
   });
 
-  const db = await select({
-    message: "Which Database Platform do you want to use?",
-    choices: [
-      { name: "Prisma", value: "prisma" },
-      { name: "None", value: "none" },
-    ],
+  const hasPrisma = await confirm({
+    message: "Do you want to install Prisma?",
+    default: true,
   });
 
   const hasTanstackQuery = await confirm({
     message: "Do you want to install Tanstack Query?",
+    default: true,
   });
 
-  return { projectName, uiLibrary, authLibrary, db, hasTanstackQuery };
+  return {
+    projectName,
+    hasAntDesign,
+    hasBetterAuth,
+    hasPrisma,
+    hasTanstackQuery,
+  };
 }

@@ -1,5 +1,5 @@
 import spawn from "cross-spawn";
-import { error, info, success } from "./log";
+import { error, info, success } from "./log.js";
 
 export function createNextApp(projectName: string) {
   info(`Creating ${projectName}...`);

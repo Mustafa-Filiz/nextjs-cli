@@ -1,14 +1,20 @@
 import fs from "fs";
 import path from "path";
-import { error, info } from "./log";
+import { error, info } from "./log.js";
+
+function readFile(filePath: string): string {
+  return fs.readFileSync(filePath, "utf-8");
+}
+
+function writeFile(filePath: string, content: string): void {
+  fs.writeFileSync(filePath, content, "utf-8");
+}
 
 export const fileEditor = {
   create(
     filePath: string,
     content: string = "",
-    options: {
-      overwrite?: boolean;
-    } = {},
+    options: { overwrite?: boolean } = {},
   ) {
     const { overwrite = false } = options;
 
@@ -17,41 +23,42 @@ export const fileEditor = {
       process.exit(1);
     }
 
-    const dir = path.dirname(filePath);
-    fs.mkdirSync(dir, { recursive: true });
-
-    fs.writeFileSync(filePath, content, "utf-8");
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
+    writeFile(filePath, content);
     info(`File created: ${filePath}`);
   },
 
   appendStart(filePath: string, content: string) {
-    const existingContent = fs.readFileSync(filePath, "utf-8");
-    fs.writeFileSync(filePath, `${content}\n${existingContent}`, "utf-8");
+    writeFile(filePath, `${content}\n${readFile(filePath)}`);
+    info(`Content prepended: ${filePath}`);
   },
 
   append(filePath: string, content: string) {
     fs.appendFileSync(filePath, content, "utf-8");
+    info(`Content appended: ${filePath}`);
   },
 
   insertAfter(filePath: string, searchLine: string, newContent: string) {
-    const lines = fs.readFileSync(filePath, "utf-8").split("\n");
+    const lines = readFile(filePath).split("\n");
     const index = lines.findIndex((l) => l.includes(searchLine));
 
     if (index === -1) {
-      error(`"${searchLine}" couldn't find → ${filePath}`);
+      error(`"${searchLine}" not found → ${filePath}`);
       process.exit(1);
     }
 
     lines.splice(index + 1, 0, newContent);
-    fs.writeFileSync(filePath, lines.join("\n"), "utf-8");
+    writeFile(filePath, lines.join("\n"));
+    info(`Content inserted after "${searchLine}": ${filePath}`);
   },
 
-  replace(filePath: string, search: string | RegExp, replace: string) {
-    const content = fs.readFileSync(filePath, "utf-8");
-    fs.writeFileSync(filePath, content.replace(search, replace), "utf-8");
+  replace(filePath: string, search: string | RegExp, replacement: string) {
+    writeFile(filePath, readFile(filePath).replace(search, replacement));
+    info(`Content replaced in: ${filePath}`);
   },
 
   overwrite(filePath: string, content: string) {
-    fs.writeFileSync(filePath, content, "utf-8");
+    writeFile(filePath, content);
+    info(`File overwritten: ${filePath}`);
   },
 };

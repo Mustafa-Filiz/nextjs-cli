@@ -1,72 +1,57 @@
 import spawn from "cross-spawn";
-import { error, info, success } from "./log";
+import { error, info, success } from "./log.js";
 import path from "path";
+
+function runCommand(
+  projectName: string,
+  bin: "npm" | "npx",
+  args: string[],
+  label: string,
+): ReturnType<typeof spawn.sync> {
+  const targetDir = path.join(process.cwd(), projectName);
+
+  info(`${label}: ${args.join(" ")} ...`);
+
+  const result = spawn.sync(bin, args, {
+    stdio: "inherit",
+    cwd: targetDir,
+  });
+
+  if (result.error || result.status !== 0) {
+    error(
+      `Failed. ${bin} exited with code ${result.status ?? result.error?.message}`,
+    );
+    process.exit(1);
+  }
+
+  success(`Done: ${args.join(", ")}`);
+  return result;
+}
 
 export function installDependencies(
   projectName: string,
   dependencies: string[],
 ) {
-  const targetDir = path.join(process.cwd(), projectName);
-
-  info(`Installing ${dependencies.join(", ")} using npm...`);
-
-  const result = spawn.sync("npm", ["install", ...dependencies], {
-    stdio: "inherit",
-    cwd: targetDir,
-  });
-
-  if (result.error || result.status !== 0) {
-    error(
-      `Installation failed. npm exited with code ${result.status || result.error?.message}`,
-    );
-    process.exit(1);
-  }
-
-  success(`Successfully installed: ${dependencies.join(", ")}`);
+  return runCommand(
+    projectName,
+    "npm",
+    ["install", ...dependencies],
+    "Installing dependencies",
+  );
 }
 
-export function installDevDependecies(
+export function installDevDependencies(
   projectName: string,
   devDependencies: string[],
 ) {
-  const targetDir = path.join(process.cwd(), projectName);
-
-  info(`Installing ${devDependencies.join(", ")} using npm...`);
-
-  const result = spawn.sync("npm", ["install", "-D", ...devDependencies], {
-    stdio: "inherit",
-    cwd: targetDir,
-  });
-
-  if (result.error || result.status !== 0) {
-    error(
-      `Installation failed. npm exited with code ${result.status || result.error?.message}`,
-    );
-    process.exit(1);
-  }
-
-  success(`Successfully installed: ${devDependencies.join(", ")}`);
+  return runCommand(
+    projectName,
+    "npm",
+    ["install", "-D", ...devDependencies],
+    "Installing dev dependencies",
+  );
 }
 
-export function installExecuteCommands(
-  projectName: string,
-  commands: string[],
-) {
-  const targetDir = path.join(process.cwd(), projectName);
-
-  info(`Executing ${commands.join(", ")} using npx...`);
-
-  const result = spawn.sync("npx", commands, {
-    stdio: "inherit",
-    cwd: targetDir,
-  });
-
-  if (result.error || result.status !== 0) {
-    error(
-      `Installation failed. npx exited with code ${result.status || result.error?.message}`,
-    );
-    process.exit(1);
-  }
-
-  success(`Successfully installed: ${commands.join(", ")}`);
+export function executeCommands(projectName: string, commands: string[]) {
+  return runCommand(projectName, "npx", commands, "Executing commands");
 }

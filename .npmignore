@@ -1,1 +1,7 @@
-src/*
+cat > .npmignore << 'EOF'
+.env
+.DS_Store
+*.log
+node_modules/
+.git/
+EOF
