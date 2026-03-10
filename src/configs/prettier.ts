@@ -19,8 +19,8 @@ export const createPrettierConfig = (projectName: string) => {
     tabWidth: 2,
     useTabs: false,
     arrowParens: 'always',
-    bracketSpacing: true,
     objectWrap: 'preserve',
+    bracketSpacing: true,
     bracketSameLine: false,
     }
     `,

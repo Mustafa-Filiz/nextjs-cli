@@ -5,6 +5,10 @@ import { createPrismaFiles } from "./db-libraries/prisma.js";
 import { createBetterAuthFiles } from "./auth-libraries/better-auth.js";
 import { success } from "./helpers/log.js";
 import { createNextApp } from "./helpers/create-next-app.js";
+import { createTanstackQueryFiles } from "./tanstack/tanstack.js";
+import { createPrettierConfig } from "./configs/prettier.js";
+import { createEslintConfig } from "./configs/eslint.js";
+import { createVsCodeSettings } from "./configs/vscode.js";
 
 export const program = new Command();
 
@@ -34,9 +38,13 @@ program
       createBetterAuthFiles(projectName);
     }
 
-    // if (hasTanstackQuery) {
-    //   installDependencies(projectName, ["@tanstack/react-query"]);
-    // }
+    if (hasTanstackQuery) {
+      createTanstackQueryFiles(projectName);
+    }
+
+    createPrettierConfig(projectName);
+    createEslintConfig(projectName);
+    createVsCodeSettings(projectName);
 
     success("Project setup is complete! Happy coding! 🚀");
   });
