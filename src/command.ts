@@ -9,6 +9,7 @@ import { createTanstackQueryFiles } from "./tanstack/tanstack.js";
 import { createPrettierConfig } from "./configs/prettier.js";
 import { createEslintConfig } from "./configs/eslint.js";
 import { createVsCodeSettings } from "./configs/vscode.js";
+import spawn from "cross-spawn";
 
 export const program = new Command();
 
@@ -45,6 +46,9 @@ program
     createPrettierConfig(projectName);
     createEslintConfig(projectName);
     createVsCodeSettings(projectName);
+
+    spawn.sync("npm", ["run", "lint:fix"]);
+    spawn.sync("npm", ["run", "format"]);
 
     success("Project setup is complete! Happy coding! 🚀");
   });

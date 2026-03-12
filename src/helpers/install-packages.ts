@@ -21,7 +21,6 @@ function runCommand(
     error(
       `Failed. ${bin} exited with code ${result.status ?? result.error?.message}`,
     );
-    process.exit(1);
   }
 
   success(`Done: ${args.join(", ")}`);

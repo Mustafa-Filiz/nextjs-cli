@@ -41,21 +41,7 @@ export const createEslintConfig = (projectName: string) => {
         },
         rules: {
           'prettier/prettier': 'error',
-          'simple-import-sort/imports': [
-            'error',
-            {
-              groups: [
-                ['^\\u0000'],
-                ['^node:'],
-                ['^react$', '^react/', '^next$', '^next/'],
-                ['^@?\\w'],
-                ['^@/'],
-                ['^\\.\\.(?!/?$)', '^\\.\\./?$'],
-                ['^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'],
-                ['^.*\\u0000$'],
-              ],
-            },
-          ],
+          'simple-import-sort/imports': 'error',
           'simple-import-sort/exports': 'error',
           'react/no-unescaped-entities': 'off',
           '@next/next/no-page-custom-font': 'off',
